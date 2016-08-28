@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>PanelController.qml</file>
+        <file>images/bar_landscape.png</file>
+        <file>images/scan_device_landscape.png</file>
+        <file>images/scanning.png</file>
+        <file>PanelScan.qml</file>
+        <file>images/acc_gyro_recorder.png</file>
+        <file>images/checkbox.png</file>
+        <file>images/checkbox_fill.png</file>
+        <file>images/pvp.png</file>
+        <file>MyCheckbox.qml</file>
+        <file>AccelLinechart.qml</file>
+        <file>images/accelerometer_logo.png</file>
+        <file>PVPchart.qml</file>
+        <file>GyroLinechart.qml</file>
+        <file>images/gyro_logo.png</file>
+        <file>Queue.js</file>
+    </qresource>
+</RCC>
