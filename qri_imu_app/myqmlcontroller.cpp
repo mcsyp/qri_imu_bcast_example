@@ -65,6 +65,11 @@ bool MyQmlController::checkServiceDetailDiscovered(QLowEnergyService *service){
                 ret=true;
                 continue;
             }
+            if(id==QString(SENSOR_BEAT_UUID)){
+                m_charBeat = c;
+                ret=true;
+                continue;
+            }
         }
         if(!ret){
             qDebug()<<tr("None of required characteristic is found.");

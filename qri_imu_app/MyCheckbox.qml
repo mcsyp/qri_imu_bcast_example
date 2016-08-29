@@ -3,7 +3,7 @@ import QtQuick 2.0
 Item {
     id:checkbox
     property var text:"hello?"
-    property var checked: false;
+    property var checked: true;
     property var enableColor:"#b0b0b0"
     signal boxChecked(var checked);
     width:(check_img.width+lbl_text.contentWidth)*scale
@@ -13,14 +13,14 @@ Item {
         source:"images/checkbox.png"
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        visible:true
+        visible:!checked
     }
     Image{
         id:check_img_fill
         source:"images/checkbox_fill.png"
         anchors.left: parent.left
         anchors.verticalCenter: parent.verticalCenter
-        visible:false
+        visible:checked
     }
     Text{
         id:lbl_text
@@ -48,8 +48,5 @@ Item {
         onClicked: {
             setChecked(!checked);
         }
-    }
-    Component.onCompleted: {
-        setChecked(false);
     }
 }

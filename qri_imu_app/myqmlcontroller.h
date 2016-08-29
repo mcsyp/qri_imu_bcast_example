@@ -32,6 +32,7 @@
 
 #define SENSOR_UUID       "00ab0001-b5a3-0f93-e0a9-e50e24dc3993"
 #define SENSOR_IMU_UUID "20ab0001-b5a3-0f93-e0a9-e50e24dc3993"
+#define SENSOR_BEAT_UUID "30ab0001-b5a3-0f93-e0a9-e50e24dc3993"
 class MyQmlController : public SingleScanner
 {
     Q_OBJECT
@@ -48,6 +49,7 @@ signals:
     void charAccelUpdated(int stamp, int ax, int ay, int az);
 private:
     QLowEnergyCharacteristic m_charImu;//read|notify imu data
+    QLowEnergyCharacteristic m_charBeat;//read|notify imu data
 };
 
 typedef struct sensing_imu {

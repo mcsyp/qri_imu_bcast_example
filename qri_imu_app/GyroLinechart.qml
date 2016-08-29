@@ -146,6 +146,10 @@ Rectangle{
             gyro_data_z.enqueue(y);
         }
         canvas_2d.requestPaint();
+
+        //gyro_z.setChecked(true);
+        //gyro_y.setChecked(true);
+        //gyro_x.setChecked(true);
     }
 
 }

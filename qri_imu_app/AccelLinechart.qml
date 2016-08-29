@@ -22,7 +22,7 @@ Rectangle{
         x:chkbox_accel_z.x-chkbox_accel_y.width-5
         y:chkbox_accel_z.y;
         scale:newscale
-        text:"Gyro Y"
+        text:"Accel Y"
         enableColor: "#00FF00"
     }
     MyCheckbox{
@@ -30,7 +30,7 @@ Rectangle{
         x:chkbox_accel_y.x-chkbox_accel_x.width-5
         y:chkbox_accel_z.y
         scale:newscale
-        text:"Gyro X"
+        text:"Accel X"
         enableColor: "#FF0000"
     }
     Image{
