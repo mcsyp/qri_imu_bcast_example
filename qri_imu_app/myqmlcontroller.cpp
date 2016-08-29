@@ -34,13 +34,8 @@ bool MyQmlController::checkServiceDetailDiscovered(QLowEnergyService *service){
             c = list.at(i);
             QString id = uuidToString(c.uuid());
             qDebug()<<tr("found char uuid:%1").arg(id);
-            if(id==QString(SENSOR_ACCEL_UUID)){
-                m_charAcc = c;
-                ret=true;
-                continue;
-            }
-            if(id==QString(SENSOR_GYRO_UUID)){
-                m_charGyro =c;
+            if(id==QString(SENSOR_IMU_UUID)){
+                m_charImu = c;
                 ret=true;
                 continue;
             }
@@ -51,8 +46,7 @@ bool MyQmlController::checkServiceDetailDiscovered(QLowEnergyService *service){
         }
 
         /*enable the notify*/
-        enableCharacteristicNotify(service,m_charAcc,true);
-        enableCharacteristicNotify(service,m_charGyro,true);
+        enableCharacteristicNotify(service,m_charImu,true);
     }while(0);
 
     return ret;
@@ -61,19 +55,13 @@ void MyQmlController::postCharacteristicValueReceived(const QLowEnergyService *s
                                                       const QLowEnergyCharacteristic &c,
                                                       const QByteArray &value)
 {
+    (void)service;
     do{
-        if(c==m_charAcc){/*accel data*/
-            sensing_accel_t * ptr;
-            ptr = (sensing_accel_t*)value.data();
-            emit charAccelUpdated(ptr->stamp,ptr->x,ptr->y,ptr->z);
-
-            break;
-        }
-        if(c==m_charGyro){/*gyro data*/
-            sensing_gyro_t* ptr;
-            ptr = (sensing_gyro_t*)value.data();
-            emit charGyroUpdated(ptr->stamp,ptr->x,ptr->y,ptr->z);
-
+        if(c==m_charImu){/*accel data*/
+            sensing_imu_t * ptr;
+            ptr = (sensing_imu_t*)value.data();
+            emit charAccelUpdated(ptr->stamp,ptr->ax,ptr->ay,ptr->az);
+            emit charGyroUpdated(ptr->stamp,ptr->gx,ptr->gy,ptr->gz);
             break;
         }
     }while(0);

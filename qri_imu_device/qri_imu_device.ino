@@ -21,30 +21,23 @@
 #define BLE_LOCAL_NAME "qri_imu_bcast"
 
 #define SENSOR_UUID       "00ab0001-b5a3-0f93-e0a9-e50e24dc3993"
-#define SENSOR_ACCEL_UUID "20ab0001-b5a3-0f93-e0a9-e50e24dc3993"
-#define SENSOR_GYRO_UUID  "30ab0001-b5a3-0f93-e0a9-e50e24dc3993"
+#define SENSOR_IMU_UUID "20ab0001-b5a3-0f93-e0a9-e50e24dc3993"
 
-typedef struct sensing_accel {
+typedef struct sensing_imu {
     uint32_t stamp;
-    int16_t x;
-    int16_t y;
-    int16_t z;
-} sensing_accel_t;
-
-typedef struct sensing_gyro {
-    int32_t stamp;
-    int16_t x;
-    int16_t y;
-    int16_t z;
-} sensing_gyro_t;
+    int16_t ax;
+    int16_t ay;
+    int16_t az;
+    int16_t gx;
+    int16_t gy;
+    int16_t gz;
+} sensing_imu_t;
 
 
-#define SENSOR_ACCEL_MAX_LEN 12
-#define SENSOR_GYRO_MAX_LEN 12
+#define SENSOR_IMU_MAX_LEN 17
 BLEPeripheral blePeripheral;  // BLE Peripheral Device (the board you're programming)
 BLEService imuService(SENSOR_UUID); 
-BLECharacteristic accelChar(SENSOR_ACCEL_UUID,BLERead | BLENotify,SENSOR_ACCEL_MAX_LEN);
-BLECharacteristic gyroChar(SENSOR_GYRO_UUID,BLERead | BLENotify,SENSOR_GYRO_MAX_LEN);
+BLECharacteristic imuChar(SENSOR_IMU_UUID,BLERead | BLENotify,SENSOR_IMU_MAX_LEN);
 
 #define LED 13
 
@@ -60,8 +53,7 @@ void setup() {
 
   // add service and characteristic:
   blePeripheral.addAttribute(imuService);
-  blePeripheral.addAttribute(accelChar);
-  blePeripheral.addAttribute(gyroChar);
+  blePeripheral.addAttribute(imuChar);
 
   // begin advertising BLE service:
   blePeripheral.begin();
@@ -79,8 +71,7 @@ void setup() {
 int last_led_state=0;
 int ax, ay, az;         // accelerometer values
 int gx, gy, gz;         // gyrometer values
-sensing_accel_t st_accel;
-sensing_gyro_t  st_gyro;
+sensing_imu_t st_imu;
 int count=0;
 void loop() {
   // listen for BLE peripherals to connect:
@@ -101,23 +92,17 @@ void loop() {
       //TODO:update the imu data to server
       CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
       count++;
-      st_accel.stamp = count;
-      st_accel.x = (int16_t)ax;
-      st_accel.y = (int16_t)ay;
-      st_accel.z = (int16_t)az;
-      
-      st_gyro.stamp = count;
-      st_gyro.x = (int16_t)gx;
-      st_gyro.y = (int16_t)gy;
-      st_gyro.z = (int16_t)gz;
+      st_imu.stamp = count;
+      st_imu.ax = (int16_t)ax;
+      st_imu.ay = (int16_t)ay;
+      st_imu.az = (int16_t)az;
+      st_imu.gx = (int16_t)gx;
+      st_imu.gy = (int16_t)gy;
+      st_imu.gz = (int16_t)gz;
 
-      unsigned char * pst_data = (unsigned char*)(&st_accel);
-      unsigned short data_len = sizeof(st_accel);
-      accelChar.setValue(pst_data,data_len);
-      
-      pst_data = (unsigned char*)(&st_gyro);
-      data_len = sizeof(st_gyro);
-      gyroChar.setValue(pst_data,data_len);
+      unsigned char * pst_data = (unsigned char*)(&st_imu);
+      unsigned short data_len = sizeof(st_imu);
+      imuChar.setValue(pst_data,data_len);
       delay(30);
     }
 
