@@ -16,6 +16,7 @@
    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include <CurieBLE.h>
+#include "CurieIMU.h"
 
 #define BLE_LOCAL_NAME "qri_imu_bcast"
 
@@ -25,16 +26,16 @@
 
 typedef struct sensing_accel {
     uint32_t stamp;
-    uint16_t x;
-    uint16_t y;
-    uint16_t z;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 } sensing_accel_t;
 
 typedef struct sensing_gyro {
-    uint32_t stamp;
-    uint16_t x;
-    uint16_t y;
-    uint16_t z;
+    int32_t stamp;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 } sensing_gyro_t;
 
 
@@ -66,8 +67,21 @@ void setup() {
   blePeripheral.begin();
   
   Serial.println("BLE LED Peripheral");
+
+  CurieIMU.begin();
+  CurieIMU.autoCalibrateGyroOffset();
+
+  CurieIMU.autoCalibrateAccelerometerOffset(X_AXIS, 0);
+  CurieIMU.autoCalibrateAccelerometerOffset(Y_AXIS, 0);
+  CurieIMU.autoCalibrateAccelerometerOffset(Z_AXIS, 0);
 }
 
+int last_led_state=0;
+int ax, ay, az;         // accelerometer values
+int gx, gy, gz;         // gyrometer values
+sensing_accel_t st_accel;
+sensing_gyro_t  st_gyro;
+int count=0;
 void loop() {
   // listen for BLE peripherals to connect:
   BLECentral central = blePeripheral.central();
@@ -78,16 +92,43 @@ void loop() {
     // print the central's MAC address:
     Serial.println(central.address());
 
+    digitalWrite(LED,HIGH);
+    count = 0;
     // while the central is still connected to peripheral:
     while (central.connected()) {
       // if the remote device wrote to the characteristic,
       // use the value to control the LED:
       //TODO:update the imu data to server
+      CurieIMU.readMotionSensor(ax, ay, az, gx, gy, gz);
+      count++;
+      st_accel.stamp = count;
+      st_accel.x = (int16_t)ax;
+      st_accel.y = (int16_t)ay;
+      st_accel.z = (int16_t)az;
+      
+      st_gyro.stamp = count;
+      st_gyro.x = (int16_t)gx;
+      st_gyro.y = (int16_t)gy;
+      st_gyro.z = (int16_t)gz;
+
+      unsigned char * pst_data = (unsigned char*)(&st_accel);
+      unsigned short data_len = sizeof(st_accel);
+      accelChar.setValue(pst_data,data_len);
+      
+      pst_data = (unsigned char*)(&st_gyro);
+      data_len = sizeof(st_gyro);
+      gyroChar.setValue(pst_data,data_len);
+      delay(30);
     }
 
     // when the central disconnects, print it out:
     Serial.print(F("Disconnected from central: "));
     Serial.println(central.address());
+  }else{
+    last_led_state=!last_led_state;
+    digitalWrite(LED,last_led_state);
+    delay(500);
+    count = 0;
   }
 }
 

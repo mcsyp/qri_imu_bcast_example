@@ -34,11 +34,6 @@ bool MyQmlController::checkServiceDetailDiscovered(QLowEnergyService *service){
             c = list.at(i);
             QString id = uuidToString(c.uuid());
             qDebug()<<tr("found char uuid:%1").arg(id);
-            if(id==QString(SENSOR_PVP_UUID)){
-                m_charPVP = c;
-                ret = true;
-                continue;
-            }
             if(id==QString(SENSOR_ACCEL_UUID)){
                 m_charAcc = c;
                 ret=true;
@@ -71,12 +66,14 @@ void MyQmlController::postCharacteristicValueReceived(const QLowEnergyService *s
             sensing_accel_t * ptr;
             ptr = (sensing_accel_t*)value.data();
             emit charAccelUpdated(ptr->stamp,ptr->x,ptr->y,ptr->z);
+
             break;
         }
         if(c==m_charGyro){/*gyro data*/
             sensing_gyro_t* ptr;
             ptr = (sensing_gyro_t*)value.data();
             emit charGyroUpdated(ptr->stamp,ptr->x,ptr->y,ptr->z);
+
             break;
         }
     }while(0);

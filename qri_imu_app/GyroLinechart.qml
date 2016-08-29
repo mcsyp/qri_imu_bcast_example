@@ -89,20 +89,20 @@ Rectangle{
         target:cstController
         onCharGyroUpdated:{
             //process gx
-            var agx=gx*10/32768.9;
+            var agx=gx*100/32768.9;
             gyro_data_x.enqueue(agx);
             if(gyro_data_x.size()>sample_max){
                 gyro_data_x.dequeue();
             }
             //process gy
-            var agy=gy*10/32768.9;
+            var agy=gy*100/32768.9;
             gyro_data_y.enqueue(agy);
             if(gyro_data_y.size()>sample_max){
                 gyro_data_y.dequeue();
             }
 
             //process gz
-            var agz=gz*10/32768.9;
+            var agz=gz*100/32768.9;
             gyro_data_z.enqueue(agz);
             if(gyro_data_z.size()>sample_max){
                 gyro_data_z.dequeue();

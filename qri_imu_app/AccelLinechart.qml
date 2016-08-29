@@ -89,27 +89,27 @@ Rectangle{
         target:cstController
         onCharAccelUpdated:{
             //process gx
-            var agx=ax*2000/32768.9;
+            var agx=ax*500/32768.9;
             accel_data_x.enqueue(agx);
             if(accel_data_x.size()>sample_max){
                 accel_data_x.dequeue();
             }
             //process gy
-            var agy=ay*2000/32768.9;
+            var agy=ay*500/32768.9;
             accel_data_y.enqueue(agy);
             if(accel_data_y.size()>sample_max){
                 accel_data_y.dequeue();
             }
 
             //process gz
-            var agz=az*2000/32768.9;
+            var agz=az*500/32768.9;
             accel_data_z.enqueue(agz);
             if(accel_data_z.size()>sample_max){
                 accel_data_z.dequeue();
             }
 
-            console.log(agx+","+agy+","+agz);
-            console.log(ax+","+ay+","+az);
+            //console.log(agx+","+agy+","+agz);
+            //console.log(ax+","+ay+","+az);
             canvas_2d.requestPaint();
         }
     }

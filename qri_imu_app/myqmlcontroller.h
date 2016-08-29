@@ -22,23 +22,22 @@ signals:
     void charGyroUpdated(int stamp,int gx, int gy, int gz);
     void charAccelUpdated(int stamp, int ax, int ay, int az);
 private:
-    QLowEnergyCharacteristic m_charPVP;//read|notify acc data
     QLowEnergyCharacteristic m_charAcc;//read|notify acc data
     QLowEnergyCharacteristic m_charGyro;//read|notify acc data
 };
 
 typedef struct sensing_accel {
     uint32_t stamp;
-    uint16_t x;
-    uint16_t y;
-    uint16_t z;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 } sensing_accel_t;
 
 typedef struct sensing_gyro {
     uint32_t stamp;
-    uint16_t x;
-    uint16_t y;
-    uint16_t z;
+    int16_t x;
+    int16_t y;
+    int16_t z;
 } sensing_gyro_t;
 
 #endif // SPIDERCENTER_H
